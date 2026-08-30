@@ -1,0 +1,12 @@
+{
+  "domain": "bilresa_remote",
+  "name": "Bilresa Remote",
+  "codeowners": ["@rohanod"],
+  "config_flow": true,
+  "documentation": "https://github.com/rohanod/ha-bilresa-remote",
+  "integration_type": "helper",
+  "iot_class": "calculated",
+  "issue_tracker": "https://github.com/rohanod/ha-bilresa-remote/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}

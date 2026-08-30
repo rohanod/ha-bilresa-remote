@@ -1,0 +1,135 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Bilresa Remote",
+        "description": "Select your IKEA BILRESA scroll wheel remote (Matter).",
+        "data": {
+          "device_id": "Bilresa scroll wheel remote"
+        },
+        "data_description": {
+          "device_id": "Only devices from IKEA of Sweden with model 'BILRESA scroll wheel' are listed."
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "This device is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Global settings",
+        "data": {
+          "dim_step_pct": "Dimmer step percentage",
+          "dim_min_pct": "Minimum brightness (%)",
+          "min_color_temp": "Minimum color temperature (K)",
+          "max_color_temp": "Maximum color temperature (K)",
+          "color_temp_step": "Color temperature step (K)",
+          "color_hue_step": "Color hue step (\u00b0)",
+          "color_saturation": "Color saturation (%)",
+          "light_transition_duration": "Light transition duration (s)",
+          "volume_step_pct": "Media player volume step percentage",
+          "volume_use_up_down_for_instant": "Use volume up/down actions for instant mode",
+          "volume_max_pct": "Media player max volume percentage",
+          "fan_step_pct": "Fan speed step percentage",
+          "fan_max_pct": "Fan max speed percentage",
+          "fan_min_pct": "Fan minimum running speed percentage",
+          "on_hold_delay": "On hold delay (s)",
+          "max_queued_automation_calls": "Max queued calls",
+          "copy_channels": "Copy channel configuration",
+          "edit_channels": "Edit channel configuration after copying"
+        },
+        "data_description": {
+          "dim_step_pct": "Change in brightness in % when scrolling.",
+          "dim_min_pct": "Minimum brightness in % when dimming down.",
+          "min_color_temp": "Minimum color temperature in K (color_temp mode).",
+          "max_color_temp": "Maximum color temperature in K (color_temp mode).",
+          "color_temp_step": "Change in color temperature in K per scroll click.",
+          "color_hue_step": "Change in color hue in degrees per scroll click.",
+          "color_saturation": "Color saturation in % used when setting hue.",
+          "light_transition_duration": "Duration of light transitions in seconds.",
+          "volume_step_pct": "Change in media player volume in % per scroll click.",
+          "volume_use_up_down_for_instant": "Instant mode uses volume_up/volume_down instead of the step percentage.",
+          "volume_max_pct": "Maximum volume in % for media players.",
+          "fan_step_pct": "Change in fan speed in % per scroll click (used when the fan does not report its own step).",
+          "fan_max_pct": "Maximum fan speed in %.",
+          "fan_min_pct": "Minimum non-zero fan speed in %.",
+          "on_hold_delay": "Delay between repeated on-hold action calls in seconds.",
+          "max_queued_automation_calls": "Maximum number of queued event handlers.",
+          "copy_channels": "Copy all settings (actions, targets, modes) from one channel to the others. Applied before channel editing.",
+          "edit_channels": "If disabled, only global settings and the channel copy are saved."
+        }
+      },
+      "channel_1": {
+        "title": "Channel 1",
+        "data": {
+          "click_action_ch1": "Click action",
+          "double_click_action_ch1": "Double-click action",
+          "triple_click_action_ch1": "Triple-click action",
+          "long_click_action_ch1": "Long-click action",
+          "on_hold_action_ch1": "On-hold action",
+          "scroll_wheel_target_ch1": "Scroll wheel target entities",
+          "scroll_wheel_mode_ch1": "Scroll wheel mode",
+          "scroll_wheel_mode_dynamic_ch1": "Scroll wheel mode input_select",
+          "scroll_wheel_mode_ext_ch1": "Scroll wheel evaluation mode",
+          "scroll_wheel_user_action_ch1": "User defined scroll wheel action"
+        },
+        "data_description": {
+          "on_hold_action_ch1": "Repeated while the button is held, see on hold delay.",
+          "scroll_wheel_target_ch1": "Light, media player, or fan entities controlled by the scroll wheel. Empty for user defined mode.",
+          "scroll_wheel_mode_ch1": "Attribute of the target entities controlled by the scroll wheel.",
+          "scroll_wheel_mode_dynamic_ch1": "For dynamic mode only: an input_select whose current option selects the scroll wheel mode.",
+          "scroll_wheel_mode_ext_ch1": "Relaxed: one action after scrolling. Instant: many actions while scrolling (requires the hidden sensor entities to be enabled).",
+          "scroll_wheel_user_action_ch1": "For user defined mode only. Variables: scroll_clicks (1-8, always 1 in instant mode), scroll_direction (left or right)."
+        }
+      },
+      "channel_2": {
+        "title": "Channel 2",
+        "data": {
+          "click_action_ch2": "Click action",
+          "double_click_action_ch2": "Double-click action",
+          "triple_click_action_ch2": "Triple-click action",
+          "long_click_action_ch2": "Long-click action",
+          "on_hold_action_ch2": "On-hold action",
+          "scroll_wheel_target_ch2": "Scroll wheel target entities",
+          "scroll_wheel_mode_ch2": "Scroll wheel mode",
+          "scroll_wheel_mode_dynamic_ch2": "Scroll wheel mode input_select",
+          "scroll_wheel_mode_ext_ch2": "Scroll wheel evaluation mode",
+          "scroll_wheel_user_action_ch2": "User defined scroll wheel action"
+        },
+        "data_description": {
+          "on_hold_action_ch2": "Repeated while the button is held, see on hold delay.",
+          "scroll_wheel_target_ch2": "Light, media player, or fan entities controlled by the scroll wheel. Empty for user defined mode.",
+          "scroll_wheel_mode_ch2": "Attribute of the target entities controlled by the scroll wheel.",
+          "scroll_wheel_mode_dynamic_ch2": "For dynamic mode only: an input_select whose current option selects the scroll wheel mode.",
+          "scroll_wheel_mode_ext_ch2": "Relaxed: one action after scrolling. Instant: many actions while scrolling (requires the hidden sensor entities to be enabled).",
+          "scroll_wheel_user_action_ch2": "For user defined mode only. Variables: scroll_clicks (1-8, always 1 in instant mode), scroll_direction (left or right)."
+        }
+      },
+      "channel_3": {
+        "title": "Channel 3",
+        "data": {
+          "click_action_ch3": "Click action",
+          "double_click_action_ch3": "Double-click action",
+          "triple_click_action_ch3": "Triple-click action",
+          "long_click_action_ch3": "Long-click action",
+          "on_hold_action_ch3": "On-hold action",
+          "scroll_wheel_target_ch3": "Scroll wheel target entities",
+          "scroll_wheel_mode_ch3": "Scroll wheel mode",
+          "scroll_wheel_mode_dynamic_ch3": "Scroll wheel mode input_select",
+          "scroll_wheel_mode_ext_ch3": "Scroll wheel evaluation mode",
+          "scroll_wheel_user_action_ch3": "User defined scroll wheel action"
+        },
+        "data_description": {
+          "on_hold_action_ch3": "Repeated while the button is held, see on hold delay.",
+          "scroll_wheel_target_ch3": "Light, media player, or fan entities controlled by the scroll wheel. Empty for user defined mode.",
+          "scroll_wheel_mode_ch3": "Attribute of the target entities controlled by the scroll wheel.",
+          "scroll_wheel_mode_dynamic_ch3": "For dynamic mode only: an input_select whose current option selects the scroll wheel mode.",
+          "scroll_wheel_mode_ext_ch3": "Relaxed: one action after scrolling. Instant: many actions while scrolling (requires the hidden sensor entities to be enabled).",
+          "scroll_wheel_user_action_ch3": "For user defined mode only. Variables: scroll_clicks (1-8, always 1 in instant mode), scroll_direction (left or right)."
+        }
+      }
+    }
+  }
+}
