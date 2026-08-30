@@ -15,7 +15,7 @@ from copy import deepcopy
 import logging
 from typing import Any
 
-from homeassistant.core import HomeAssistant, State, callback
+from homeassistant.core import Context, HomeAssistant, State, callback
 from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.event import async_track_state_change_event
 from homeassistant.helpers.script import Script
@@ -85,7 +85,7 @@ class BilresaEngine:
                 "scroll mode, that the hidden sensor entities are enabled.",
                 self.entry.data.get(CONF_DEVICE_ID),
             )
-        self._worker_task = self.hass.async_create_task(
+        self._worker_task = self.hass.async_create_background_task(
             self._worker_loop(), name=f"{DOMAIN}_worker_{self.entry.entry_id}"
         )
 
@@ -397,7 +397,7 @@ class BilresaEngine:
             DOMAIN,
         )
         try:
-            await script.async_run(variables=variables)
+            await script.async_run(run_variables=variables, context=Context())
         except Exception:  # noqa: BLE001 - scripted actions may fail arbitrarily
             _LOGGER.exception("Error running %s for channel %s", field, channel)
 

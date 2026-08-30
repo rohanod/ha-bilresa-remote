@@ -8,16 +8,16 @@ from typing import Any
 import voluptuous as vol
 
 from homeassistant import config_entries
-from homeassistant.config_entries import ConfigFlowResult, OptionsFlowResult
+from homeassistant.config_entries import ConfigFlowResult
 from homeassistant.core import callback
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.selector import (
     ActionSelector,
     ActionSelectorConfig,
     BooleanSelector,
+    DeviceFilterSelectorConfig,
     DeviceSelector,
     DeviceSelectorConfig,
-    DeviceSelectorFilter,
     EntitySelector,
     EntitySelectorConfig,
     NumberSelector,
@@ -144,6 +144,14 @@ class BilresaRemoteConfigFlow(config_entries.ConfigFlow, domain="bilresa_remote"
 
     VERSION = 1
 
+    @staticmethod
+    @callback
+    def async_get_options_flow(
+        config_entry: config_entries.ConfigEntry,
+    ) -> BilresaRemoteOptionsFlow:
+        """Create the options flow handler."""
+        return BilresaRemoteOptionsFlow(config_entry)
+
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
@@ -165,7 +173,11 @@ class BilresaRemoteConfigFlow(config_entries.ConfigFlow, domain="bilresa_remote"
                 {
                     vol.Required(CONF_DEVICE_ID): DeviceSelector(
                         DeviceSelectorConfig(
-                            filter=[DeviceSelectorFilter(manufacturer=MANUFACTURER, model=MODEL)]
+                            filter=[
+                                DeviceFilterSelectorConfig(
+                                    manufacturer=MANUFACTURER, model=MODEL
+                                )
+                            ]
                         )
                     )
                 }
