@@ -17,24 +17,6 @@
     }
   },
   "options": {
-    "menu": {
-      "init": {
-        "lights": "Light settings",
-        "media": "Media player settings",
-        "fan": "Fan settings",
-        "misc": "Miscellaneous settings",
-        "copy": "Copy channel configuration",
-        "channels": "Channels",
-        "remove": "Remove channel configuration",
-        "done": "Save and close"
-      },
-      "channels": {
-        "channel_1": "Channel 1",
-        "channel_2": "Channel 2",
-        "channel_3": "Channel 3",
-        "back": "\u2190 Back"
-      }
-    },
     "step": {
       "lights": {
         "title": "Light settings",
@@ -45,7 +27,7 @@
           "min_color_temp": "Minimum color temperature (K)",
           "max_color_temp": "Maximum color temperature (K)",
           "color_temp_step": "Color temperature step (K)",
-          "color_hue_step": "Color hue step (\u00b0)",
+          "color_hue_step": "Color hue step (°)",
           "color_saturation": "Color saturation (%)",
           "light_transition_duration": "Light transition duration (s)"
         },
@@ -103,7 +85,7 @@
         "title": "Copy channel configuration",
         "description": "Copy all settings (actions, targets, modes) from one channel to the others. The source channel is left unchanged.",
         "data": {
-          "copy_channels": "Copy from \u2192 to"
+          "copy_channels": "Copy from → to"
         },
         "data_description": {
           "copy_channels": "The selected channel's full configuration is cloned onto the target channels."
@@ -216,6 +198,26 @@
           "scroll_wheel_mode_dynamic_ch3": "For dynamic mode only: an input_select whose current option selects the scroll wheel mode.",
           "scroll_wheel_mode_ext_ch3": "Relaxed: one action after scrolling. Instant: many actions while scrolling (requires the hidden sensor entities to be enabled).",
           "scroll_wheel_user_action_ch3": "For user defined mode only. Variables: scroll_clicks (1-8, always 1 in instant mode), scroll_direction (left or right)."
+        }
+      },
+      "init": {
+        "menu_options": {
+          "lights": "Light settings",
+          "media": "Media player settings",
+          "fan": "Fan settings",
+          "misc": "Miscellaneous settings",
+          "copy": "Copy channel configuration",
+          "channels": "Channels",
+          "remove": "Remove channel configuration",
+          "done": "Save and close"
+        }
+      },
+      "channels": {
+        "menu_options": {
+          "channel_1": "Channel 1",
+          "channel_2": "Channel 2",
+          "channel_3": "Channel 3",
+          "back": "← Back"
         }
       }
     }
