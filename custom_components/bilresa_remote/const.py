@@ -90,4 +90,5 @@ COPY_CHOICES: dict[str, tuple[int, list[int]] | None] = {
 
 EDIT_CHANNELS = "edit_channels"
 COPY_CHANNELS = "copy_channels"
+REMOVE_CHANNELS = "remove_channels"
 UI_ONLY_FIELDS = (COPY_CHANNELS, EDIT_CHANNELS)

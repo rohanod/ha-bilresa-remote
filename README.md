@@ -32,11 +32,18 @@ Copy `custom_components/bilresa_remote/` into the `custom_components/` folder of
 
 ## Configuration
 
-1. **Settings → Devices & Services → Add Integration → Bilresa Remote**, then pick your BILRESA remote device.
-2. Open **Configure** on the integration entry to set it up:
-   - **Global settings** — dim/color-temp/hue/volume/fan steps and limits, transition duration, on-hold delay, max queued calls.
-   - **Copy channel configuration** — pick e.g. `1 → 2 & 3` to clone channel 1 onto channels 2 and 3 before editing them.
-   - **Channels 1–3** — button actions, scroll wheel mode, target entities, evaluation mode, and the user-defined scroll action. Defaults work out of the box for dimming lights.
+1. **Settings → Devices & Services → Add Integration → Bilresa Remote**, then pick your BILRESA remote device. That's the whole setup — everything else is optional.
+2. Open **Configure** on the integration entry. The options are menu-driven, one small page per area:
+   - **Light / Media player / Fan / Miscellaneous settings** — steps and limits, applied to all channels.
+   - **Channels** — each channel has two collapsible groups: *Button actions* (click/double/triple/long-press/hold) and *Scroll wheel* (mode, target entities, evaluation mode, user-defined action). Defaults work out of the box for dimming lights.
+   - **Copy channel configuration** — pick e.g. `1 → 2 & 3` to clone a channel's full config (actions, targets, modes) onto other channels. The source channel is left unchanged.
+   - **Remove channel configuration** — reset one or more channels back to their defaults.
+   - **Save and close** — applies everything; the entry reloads automatically.
+
+### Removing / deleting
+
+- **Reset a channel**: Configure → *Remove channel configuration* → select the channels.
+- **Delete the integration entirely**: Settings → Devices & Services → Bilresa Remote → ⋮ → **Delete**. The remote stops responding to the integration immediately (the device itself keeps working in its default Matter behavior).
 
 ### Instant mode
 

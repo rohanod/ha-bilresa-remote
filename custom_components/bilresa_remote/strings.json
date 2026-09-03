@@ -17,9 +17,28 @@
     }
   },
   "options": {
-    "step": {
+    "menu": {
       "init": {
-        "title": "Global settings",
+        "lights": "Light settings",
+        "media": "Media player settings",
+        "fan": "Fan settings",
+        "misc": "Miscellaneous settings",
+        "copy": "Copy channel configuration",
+        "channels": "Channels",
+        "remove": "Remove channel configuration",
+        "done": "Save and close"
+      },
+      "channels": {
+        "channel_1": "Channel 1",
+        "channel_2": "Channel 2",
+        "channel_3": "Channel 3",
+        "back": "\u2190 Back"
+      }
+    },
+    "step": {
+      "lights": {
+        "title": "Light settings",
+        "description": "Applied to all channels when controlling lights with the scroll wheel.",
         "data": {
           "dim_step_pct": "Dimmer step percentage",
           "dim_min_pct": "Minimum brightness (%)",
@@ -28,17 +47,7 @@
           "color_temp_step": "Color temperature step (K)",
           "color_hue_step": "Color hue step (\u00b0)",
           "color_saturation": "Color saturation (%)",
-          "light_transition_duration": "Light transition duration (s)",
-          "volume_step_pct": "Media player volume step percentage",
-          "volume_use_up_down_for_instant": "Use volume up/down actions for instant mode",
-          "volume_max_pct": "Media player max volume percentage",
-          "fan_step_pct": "Fan speed step percentage",
-          "fan_max_pct": "Fan max speed percentage",
-          "fan_min_pct": "Fan minimum running speed percentage",
-          "on_hold_delay": "On hold delay (s)",
-          "max_queued_automation_calls": "Max queued calls",
-          "copy_channels": "Copy channel configuration",
-          "edit_channels": "Edit channel configuration after copying"
+          "light_transition_duration": "Light transition duration (s)"
         },
         "data_description": {
           "dim_step_pct": "Change in brightness in % when scrolling.",
@@ -48,21 +57,80 @@
           "color_temp_step": "Change in color temperature in K per scroll click.",
           "color_hue_step": "Change in color hue in degrees per scroll click.",
           "color_saturation": "Color saturation in % used when setting hue.",
-          "light_transition_duration": "Duration of light transitions in seconds.",
+          "light_transition_duration": "Duration of light transitions in seconds."
+        }
+      },
+      "media": {
+        "title": "Media player settings",
+        "description": "Applied to all channels when controlling media players with the scroll wheel.",
+        "data": {
+          "volume_step_pct": "Media player volume step percentage",
+          "volume_use_up_down_for_instant": "Use volume up/down actions for instant mode",
+          "volume_max_pct": "Media player max volume percentage"
+        },
+        "data_description": {
           "volume_step_pct": "Change in media player volume in % per scroll click.",
           "volume_use_up_down_for_instant": "Instant mode uses volume_up/volume_down instead of the step percentage.",
-          "volume_max_pct": "Maximum volume in % for media players.",
+          "volume_max_pct": "Maximum volume in % for media players."
+        }
+      },
+      "fan": {
+        "title": "Fan settings",
+        "description": "Applied to all channels when controlling fans with the scroll wheel.",
+        "data": {
+          "fan_step_pct": "Fan speed step percentage",
+          "fan_max_pct": "Fan max speed percentage",
+          "fan_min_pct": "Fan minimum running speed percentage"
+        },
+        "data_description": {
           "fan_step_pct": "Change in fan speed in % per scroll click (used when the fan does not report its own step).",
           "fan_max_pct": "Maximum fan speed in %.",
-          "fan_min_pct": "Minimum non-zero fan speed in %.",
+          "fan_min_pct": "Minimum non-zero fan speed in %."
+        }
+      },
+      "misc": {
+        "title": "Miscellaneous settings",
+        "data": {
+          "on_hold_delay": "On hold delay (s)",
+          "max_queued_automation_calls": "Max queued calls"
+        },
+        "data_description": {
           "on_hold_delay": "Delay between repeated on-hold action calls in seconds.",
-          "max_queued_automation_calls": "Maximum number of queued event handlers.",
-          "copy_channels": "Copy all settings (actions, targets, modes) from one channel to the others. Applied before channel editing.",
-          "edit_channels": "If disabled, only global settings and the channel copy are saved."
+          "max_queued_automation_calls": "Maximum number of queued event handlers."
+        }
+      },
+      "copy": {
+        "title": "Copy channel configuration",
+        "description": "Copy all settings (actions, targets, modes) from one channel to the others. The source channel is left unchanged.",
+        "data": {
+          "copy_channels": "Copy from \u2192 to"
+        },
+        "data_description": {
+          "copy_channels": "The selected channel's full configuration is cloned onto the target channels."
+        }
+      },
+      "remove": {
+        "title": "Remove channel configuration",
+        "description": "Reset channels back to their defaults (lights: dim, relaxed). Removing all three leaves only the global settings.",
+        "data": {
+          "remove_channels": "Channels to reset"
+        },
+        "data_description": {
+          "remove_channels": "All button actions, scroll targets and modes of the selected channels are deleted."
         }
       },
       "channel_1": {
         "title": "Channel 1",
+        "sections": {
+          "button_actions": {
+            "name": "Button actions",
+            "description": "Actions triggered by the channel 1 button."
+          },
+          "scroll_wheel": {
+            "name": "Scroll wheel",
+            "description": "Scroll wheel behavior for channel 1."
+          }
+        },
         "data": {
           "click_action_ch1": "Click action",
           "double_click_action_ch1": "Double-click action",
@@ -86,6 +154,16 @@
       },
       "channel_2": {
         "title": "Channel 2",
+        "sections": {
+          "button_actions": {
+            "name": "Button actions",
+            "description": "Actions triggered by the channel 2 button."
+          },
+          "scroll_wheel": {
+            "name": "Scroll wheel",
+            "description": "Scroll wheel behavior for channel 2."
+          }
+        },
         "data": {
           "click_action_ch2": "Click action",
           "double_click_action_ch2": "Double-click action",
@@ -109,6 +187,16 @@
       },
       "channel_3": {
         "title": "Channel 3",
+        "sections": {
+          "button_actions": {
+            "name": "Button actions",
+            "description": "Actions triggered by the channel 3 button."
+          },
+          "scroll_wheel": {
+            "name": "Scroll wheel",
+            "description": "Scroll wheel behavior for channel 3."
+          }
+        },
         "data": {
           "click_action_ch3": "Click action",
           "double_click_action_ch3": "Double-click action",
