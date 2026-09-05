@@ -10,6 +10,20 @@
         "data_description": {
           "device_id": "Only devices from IKEA of Sweden with model 'BILRESA scroll wheel' are listed."
         }
+      },
+      "quick_setup": {
+        "title": "Quick setup",
+        "description": "Optional: set up the most common use for {name} — the scroll wheel controlling lights. Leave everything empty to keep the defaults. All three channels and more options are available under 'Configure' afterwards.",
+        "data": {
+          "scroll_wheel_mode_ch1": "Scroll wheel mode (channel 1)",
+          "scroll_wheel_target_ch1": "Scroll wheel target entities (channel 1)",
+          "click_action_ch1": "Click action (channel 1)"
+        },
+        "data_description": {
+          "scroll_wheel_mode_ch1": "What the scroll wheel controls on channel 1.",
+          "scroll_wheel_target_ch1": "Light, media player, or fan entities to control by scrolling on channel 1.",
+          "click_action_ch1": "Action to run when the channel 1 button is clicked."
+        }
       }
     },
     "abort": {
@@ -85,10 +99,12 @@
         "title": "Copy channel configuration",
         "description": "Copy all settings (actions, targets, modes) from one channel to the others. The source channel is left unchanged.",
         "data": {
-          "copy_channels": "Copy from → to"
+          "copy_from": "Copy settings from",
+          "copy_to": "Copy to channels"
         },
         "data_description": {
-          "copy_channels": "The selected channel's full configuration is cloned onto the target channels."
+          "copy_from": "The channel whose full configuration (actions, targets, modes) will be cloned.",
+          "copy_to": "One or more target channels. They are overwritten with the source channel's configuration."
         }
       },
       "remove": {
@@ -111,6 +127,10 @@
           "scroll_wheel": {
             "name": "Scroll wheel",
             "description": "Scroll wheel behavior for channel 1."
+          },
+          "scroll_advanced": {
+            "name": "Advanced scroll options",
+            "description": "Only needed for dynamic mode (input_select) or user defined actions on channel 1."
           }
         },
         "data": {
@@ -131,7 +151,11 @@
           "scroll_wheel_mode_ch1": "Attribute of the target entities controlled by the scroll wheel.",
           "scroll_wheel_mode_dynamic_ch1": "For dynamic mode only: an input_select whose current option selects the scroll wheel mode.",
           "scroll_wheel_mode_ext_ch1": "Relaxed: one action after scrolling. Instant: many actions while scrolling (requires the hidden sensor entities to be enabled).",
-          "scroll_wheel_user_action_ch1": "For user defined mode only. Variables: scroll_clicks (1-8, always 1 in instant mode), scroll_direction (left or right)."
+          "scroll_wheel_user_action_ch1": "For user defined mode only. Variables: scroll_clicks (1-8, always 1 in instant mode), scroll_direction (left or right).",
+          "click_action_ch1": "Runs when the button is clicked once.",
+          "double_click_action_ch1": "Runs when the button is clicked twice.",
+          "triple_click_action_ch1": "Runs when the button is clicked three times.",
+          "long_click_action_ch1": "Runs once when the button press turns into a long press."
         }
       },
       "channel_2": {
@@ -144,6 +168,10 @@
           "scroll_wheel": {
             "name": "Scroll wheel",
             "description": "Scroll wheel behavior for channel 2."
+          },
+          "scroll_advanced": {
+            "name": "Advanced scroll options",
+            "description": "Only needed for dynamic mode (input_select) or user defined actions on channel 2."
           }
         },
         "data": {
@@ -164,7 +192,11 @@
           "scroll_wheel_mode_ch2": "Attribute of the target entities controlled by the scroll wheel.",
           "scroll_wheel_mode_dynamic_ch2": "For dynamic mode only: an input_select whose current option selects the scroll wheel mode.",
           "scroll_wheel_mode_ext_ch2": "Relaxed: one action after scrolling. Instant: many actions while scrolling (requires the hidden sensor entities to be enabled).",
-          "scroll_wheel_user_action_ch2": "For user defined mode only. Variables: scroll_clicks (1-8, always 1 in instant mode), scroll_direction (left or right)."
+          "scroll_wheel_user_action_ch2": "For user defined mode only. Variables: scroll_clicks (1-8, always 1 in instant mode), scroll_direction (left or right).",
+          "click_action_ch2": "Runs when the button is clicked once.",
+          "double_click_action_ch2": "Runs when the button is clicked twice.",
+          "triple_click_action_ch2": "Runs when the button is clicked three times.",
+          "long_click_action_ch2": "Runs once when the button press turns into a long press."
         }
       },
       "channel_3": {
@@ -177,6 +209,10 @@
           "scroll_wheel": {
             "name": "Scroll wheel",
             "description": "Scroll wheel behavior for channel 3."
+          },
+          "scroll_advanced": {
+            "name": "Advanced scroll options",
+            "description": "Only needed for dynamic mode (input_select) or user defined actions on channel 3."
           }
         },
         "data": {
@@ -197,29 +233,41 @@
           "scroll_wheel_mode_ch3": "Attribute of the target entities controlled by the scroll wheel.",
           "scroll_wheel_mode_dynamic_ch3": "For dynamic mode only: an input_select whose current option selects the scroll wheel mode.",
           "scroll_wheel_mode_ext_ch3": "Relaxed: one action after scrolling. Instant: many actions while scrolling (requires the hidden sensor entities to be enabled).",
-          "scroll_wheel_user_action_ch3": "For user defined mode only. Variables: scroll_clicks (1-8, always 1 in instant mode), scroll_direction (left or right)."
+          "scroll_wheel_user_action_ch3": "For user defined mode only. Variables: scroll_clicks (1-8, always 1 in instant mode), scroll_direction (left or right).",
+          "click_action_ch3": "Runs when the button is clicked once.",
+          "double_click_action_ch3": "Runs when the button is clicked twice.",
+          "triple_click_action_ch3": "Runs when the button is clicked three times.",
+          "long_click_action_ch3": "Runs once when the button press turns into a long press."
         }
       },
       "init": {
         "menu_options": {
+          "channel_1": "Channel 1",
+          "channel_2": "Channel 2",
+          "channel_3": "Channel 3",
+          "copy": "Copy channel configuration",
+          "remove": "Remove channel configuration",
           "lights": "Light settings",
           "media": "Media player settings",
           "fan": "Fan settings",
           "misc": "Miscellaneous settings",
-          "copy": "Copy channel configuration",
-          "channels": "Channels",
-          "remove": "Remove channel configuration",
           "done": "Save and close"
         }
-      },
-      "channels": {
-        "menu_options": {
-          "channel_1": "Channel 1",
-          "channel_2": "Channel 2",
-          "channel_3": "Channel 3",
-          "back": "← Back"
-        }
       }
+    },
+    "error": {
+      "copy_overlap": "The source channel cannot also be a target.",
+      "copy_none": "Choose at least one target channel."
+    }
+  },
+  "issues": {
+    "no_entities": {
+      "title": "No BILRESA entities found",
+      "description": "No button or scroll wheel entities were found for {name}. Make sure the device is added to Home Assistant via Matter, then reload the integration."
+    },
+    "instant_sensors_missing": {
+      "title": "Instant mode needs hidden sensor entities",
+      "description": "Instant scroll evaluation is enabled for {channels}, but their hidden sensor entities are not enabled. Enable the hidden sensor entities of the BILRESA device (Settings > Devices > BILRESA > gear icon) or switch those channels back to relaxed mode."
     }
   }
 }

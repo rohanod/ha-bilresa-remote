@@ -11,7 +11,8 @@ from custom_components.bilresa_remote.const import CONF_DEVICE_ID, DOMAIN
 
 
 @pytest.mark.usefixtures("enable_custom_integrations")
-async def test_config_flow_creates_entry(hass: HomeAssistant, bilresa_device):
+async def test_config_flow_quick_setup(hass: HomeAssistant, bilresa_device):
+    """Device pick followed by the optional quick setup stores channel 1 options."""
     result = await hass.config_entries.flow.async_init(
         DOMAIN, context={"source": config_entries.SOURCE_USER}
     )
@@ -21,11 +22,43 @@ async def test_config_flow_creates_entry(hass: HomeAssistant, bilresa_device):
     result = await hass.config_entries.flow.async_configure(
         result["flow_id"], {CONF_DEVICE_ID: bilresa_device.id}
     )
+    assert result["type"] is FlowResultType.FORM
+    assert result["step_id"] == "quick_setup"
+
+    result = await hass.config_entries.flow.async_configure(
+        result["flow_id"],
+        {
+            "scroll_wheel_mode_ch1": "lights: dim",
+            "scroll_wheel_target_ch1": ["light.kitchen"],
+            "click_action_ch1": [],
+        },
+    )
     await hass.async_block_till_done()
 
     assert result["type"] is FlowResultType.CREATE_ENTRY
     assert result["data"] == {CONF_DEVICE_ID: bilresa_device.id}
     assert result["title"] == "BILRESA scroll wheel"
+    entry = result["result"]
+    assert entry.options["scroll_wheel_target_ch1"] == ["light.kitchen"]
+    assert entry.options["scroll_wheel_mode_ch1"] == "lights: dim"
+    # empty values are not stored (defaults apply)
+    assert "click_action_ch1" not in entry.options
+
+
+@pytest.mark.usefixtures("enable_custom_integrations")
+async def test_config_flow_quick_setup_defaults(hass: HomeAssistant, bilresa_device):
+    """Submitting the quick setup empty keeps all defaults."""
+    result = await hass.config_entries.flow.async_init(
+        DOMAIN, context={"source": config_entries.SOURCE_USER}
+    )
+    result = await hass.config_entries.flow.async_configure(
+        result["flow_id"], {CONF_DEVICE_ID: bilresa_device.id}
+    )
+    result = await hass.config_entries.flow.async_configure(result["flow_id"], {})
+    await hass.async_block_till_done()
+
+    assert result["type"] is FlowResultType.CREATE_ENTRY
+    assert result["result"].options == {}
 
 
 @pytest.mark.usefixtures("enable_custom_integrations")
@@ -68,42 +101,40 @@ def _pick(hass, flow_id: str, option: str):
 
 @pytest.mark.usefixtures("enable_custom_integrations")
 async def test_options_flow_menu_modular(hass: HomeAssistant, bilresa_device):
-    """The options flow opens as a menu with one page per area."""
+    """The options flow opens as a menu; channels are on the front page."""
     entry = _make_entry(hass, bilresa_device)
     await _setup(hass, entry)
 
     result = await hass.config_entries.options.async_init(entry.entry_id)
     assert result["type"] is FlowResultType.MENU
     assert set(result["menu_options"]) == {
-        "lights", "media", "fan", "misc", "copy", "channels", "remove", "done",
+        "channel_1", "channel_2", "channel_3", "copy", "remove",
+        "lights", "media", "fan", "misc", "done",
     }
 
-    # Each area is its own small form
-    result = await _pick(hass, result["flow_id"], "lights")
+    result = await _pick(hass, result["flow_id"], "channel_1")
     assert result["type"] is FlowResultType.FORM
-    assert set(result["data_schema"].schema) and result["step_id"] == "lights"
+    assert result["step_id"] == "channel_1"
+    result = await hass.config_entries.options.async_configure(
+        result["flow_id"], {"button_actions": {"click_action_ch1": []}, "scroll_wheel": {}, "scroll_advanced": {}}
+    )
+    # back on the main menu after a channel page
+    assert result["type"] is FlowResultType.MENU
+
+    result = await _pick(hass, result["flow_id"], "lights")
     result = await hass.config_entries.options.async_configure(
         result["flow_id"], {"dim_step_pct": 15}
     )
     assert result["type"] is FlowResultType.MENU
 
-    result = await _pick(hass, result["flow_id"], "media")
-    assert result["step_id"] == "media"
-    result = await hass.config_entries.options.async_configure(
-        result["flow_id"], {"volume_max_pct": 50}
-    )
-    assert result["type"] is FlowResultType.MENU
-
-    # Save and close from the menu
     result = await _pick(hass, result["flow_id"], "done")
     assert result["type"] is FlowResultType.CREATE_ENTRY
     assert entry.options["dim_step_pct"] == 15
-    assert entry.options["volume_max_pct"] == 50
 
 
 @pytest.mark.usefixtures("enable_custom_integrations")
 async def test_options_flow_copy_channel_config(hass: HomeAssistant, bilresa_device):
-    """Copy channel 1 config to channels 2 & 3 via the copy page, then edit channels."""
+    """Copy channel 1 config to channels 2 & 3 via the copy page."""
     entry = _make_entry(
         hass,
         bilresa_device,
@@ -118,60 +149,44 @@ async def test_options_flow_copy_channel_config(hass: HomeAssistant, bilresa_dev
     result = await _pick(hass, result["flow_id"], "copy")
     assert result["step_id"] == "copy"
     result = await hass.config_entries.options.async_configure(
-        result["flow_id"], {"copy_channels": "1 → 2 & 3"}
+        result["flow_id"], {"copy_from": "1", "copy_to": ["2", "3"]}
     )
     assert result["type"] is FlowResultType.MENU
-
-    result = await _pick(hass, result["flow_id"], "channels")
-    assert result["type"] is FlowResultType.MENU
-    assert set(result["menu_options"]) == {"channel_1", "channel_2", "channel_3", "back"}
-
-    result = await _pick(hass, result["flow_id"], "channel_1")
-    assert result["step_id"] == "channel_1"
-    result = await hass.config_entries.options.async_configure(
-        result["flow_id"],
-        {
-            "button_actions": {"click_action_ch1": []},
-            "scroll_wheel": {},
-        },
-    )
-    assert result["type"] is FlowResultType.MENU  # back on the channels menu
 
     result = await _pick(hass, result["flow_id"], "channel_2")
     result = await hass.config_entries.options.async_configure(
-        result["flow_id"], {"button_actions": {}, "scroll_wheel": {}}
+        result["flow_id"], {"button_actions": {}, "scroll_wheel": {}, "scroll_advanced": {}}
     )
-    result = await _pick(hass, result["flow_id"], "back")
     result = await _pick(hass, result["flow_id"], "done")
 
     assert result["type"] is FlowResultType.CREATE_ENTRY
     data = entry.options
-    # Copied config arrived on channels 2 and 3
     assert data["scroll_wheel_mode_ch2"] == "lights: on/off"
     assert data["scroll_wheel_mode_ch3"] == "lights: on/off"
     assert data["scroll_wheel_target_ch2"] == ["light.kitchen"]
     assert data["scroll_wheel_target_ch3"] == ["light.kitchen"]
-    # Channel 1 edit from its own page was applied
-    assert data["click_action_ch1"] == []
 
 
 @pytest.mark.usefixtures("enable_custom_integrations")
-async def test_options_flow_copy_without_editing(hass: HomeAssistant, bilresa_device):
-    """Copy on its own page, then save directly from the menu."""
-    entry = _make_entry(
-        hass, bilresa_device, {"scroll_wheel_mode_ext_ch1": "instant"}
-    )
+async def test_options_flow_copy_rejects_overlap(hass: HomeAssistant, bilresa_device):
+    entry = _make_entry(hass, bilresa_device, {"scroll_wheel_mode_ch1": "lights: on/off"})
     await _setup(hass, entry)
 
     result = await hass.config_entries.options.async_init(entry.entry_id)
     result = await _pick(hass, result["flow_id"], "copy")
     result = await hass.config_entries.options.async_configure(
-        result["flow_id"], {"copy_channels": "1 → 3"}
+        result["flow_id"], {"copy_from": "1", "copy_to": ["1", "2"]}
     )
-    result = await _pick(hass, result["flow_id"], "done")
+    assert result["type"] is FlowResultType.FORM
+    assert result["errors"] == {"copy_to": "copy_overlap"}
 
-    assert result["type"] is FlowResultType.CREATE_ENTRY
-    assert entry.options["scroll_wheel_mode_ext_ch3"] == "instant"
+    # fix the input and continue
+    result = await hass.config_entries.options.async_configure(
+        result["flow_id"], {"copy_from": "1", "copy_to": ["2"]}
+    )
+    assert result["type"] is FlowResultType.MENU
+    result = await _pick(hass, result["flow_id"], "done")
+    assert entry.options["scroll_wheel_mode_ch2"] == "lights: on/off"
 
 
 @pytest.mark.usefixtures("enable_custom_integrations")
@@ -199,7 +214,6 @@ async def test_options_flow_remove_channel(hass: HomeAssistant, bilresa_device):
     result = await _pick(hass, result["flow_id"], "done")
 
     assert result["type"] is FlowResultType.CREATE_ENTRY
-    # Channel 1 config removed entirely, channel 2 untouched
     assert "scroll_wheel_mode_ch1" not in entry.options
     assert "scroll_wheel_target_ch1" not in entry.options
     assert "click_action_ch1" not in entry.options
@@ -227,7 +241,11 @@ async def test_options_flow_remove_all_channels(hass: HomeAssistant, bilresa_dev
     result = await _pick(hass, result["flow_id"], "done")
 
     assert result["type"] is FlowResultType.CREATE_ENTRY
-    assert not [k for k in entry.options if k.startswith(("click", "scroll", "on_hold", "double", "triple", "long"))]
+    assert not [
+        k
+        for k in entry.options
+        if k.startswith(("click", "scroll", "on_hold", "double", "triple", "long"))
+    ]
 
 
 @pytest.mark.usefixtures("enable_custom_integrations")
@@ -237,7 +255,7 @@ async def test_unload_deletes_entry(hass: HomeAssistant, bilresa_device):
     await _setup(hass, entry)
     assert entry.entry_id in hass.data[DOMAIN]
 
-    result = await hass.config_entries.async_remove(entry.entry_id)
+    await hass.config_entries.async_remove(entry.entry_id)
     await hass.async_block_till_done()
     assert entry.state is ConfigEntryState.NOT_LOADED
     assert entry.entry_id not in hass.data.get(DOMAIN, {})

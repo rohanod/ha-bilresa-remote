@@ -74,21 +74,12 @@ DEFAULTS: dict[str, Any] = {
     "max_queued_automation_calls": 10,
 }
 
-# UI-only options-flow choice for copying one channel's configuration to others.
-COPY_CHOICES: dict[str, tuple[int, list[int]] | None] = {
-    "": None,
-    "1 → 2": (1, [2]),
-    "1 → 3": (1, [3]),
-    "2 → 1": (2, [1]),
-    "2 → 3": (2, [3]),
-    "3 → 1": (3, [1]),
-    "3 → 2": (3, [2]),
-    "1 → 2 & 3": (1, [2, 3]),
-    "2 → 1 & 3": (2, [1, 3]),
-    "3 → 1 & 2": (3, [1, 2]),
-}
-
-EDIT_CHANNELS = "edit_channels"
-COPY_CHANNELS = "copy_channels"
+# UI-only options-flow field names.
+COPY_FROM = "copy_from"
+COPY_TO = "copy_to"
 REMOVE_CHANNELS = "remove_channels"
-UI_ONLY_FIELDS = (COPY_CHANNELS, EDIT_CHANNELS)
+
+LEARN_MORE_URL = "https://github.com/rohanod/ha-bilresa-remote#instant-mode"
+
+ISSUE_NO_ENTITIES = "no_entities"
+ISSUE_INSTANT_MISSING = "instant_sensors_missing"

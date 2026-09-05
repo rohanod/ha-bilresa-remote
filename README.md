@@ -32,13 +32,21 @@ Copy `custom_components/bilresa_remote/` into the `custom_components/` folder of
 
 ## Configuration
 
-1. **Settings → Devices & Services → Add Integration → Bilresa Remote**, then pick your BILRESA remote device. That's the whole setup — everything else is optional.
-2. Open **Configure** on the integration entry. The options are menu-driven, one small page per area:
-   - **Light / Media player / Fan / Miscellaneous settings** — steps and limits, applied to all channels.
-   - **Channels** — each channel has two collapsible groups: *Button actions* (click/double/triple/long-press/hold) and *Scroll wheel* (mode, target entities, evaluation mode, user-defined action). Defaults work out of the box for dimming lights.
-   - **Copy channel configuration** — pick e.g. `1 → 2 & 3` to clone a channel's full config (actions, targets, modes) onto other channels. The source channel is left unchanged.
+1. **Settings → Devices & Services → Add Integration → Bilresa Remote**, pick your BILRESA remote device.
+2. An optional **quick setup** follows: choose what the scroll wheel should control on channel 1 (mode + target entities) and optionally a click action. Leave everything empty to keep the defaults — this pre-configures the most common use (dimming lights) so the remote works immediately.
+3. Open **Configure** on the integration entry for everything else. The options are menu-driven, one small page per area, with the channels right on the front page:
+   - **Channel 1–3** — three collapsible groups: *Button actions* (click/double/triple/long-press/hold), *Scroll wheel* (mode, target entities, evaluation), and *Advanced scroll options* (dynamic input_select, user-defined action).
+   - **Copy channel configuration** — pick a source channel and any target channels to clone a full channel config.
    - **Remove channel configuration** — reset one or more channels back to their defaults.
+   - **Light / Media player / Fan / Miscellaneous settings** — steps and limits, applied to all channels.
    - **Save and close** — applies everything; the entry reloads automatically.
+
+### Repairs
+
+The integration raises repair issues (Settings → Repairs) to point out configuration problems:
+
+- **No BILRESA entities found** — the device has no button/scroll entities yet (e.g. not added via Matter).
+- **Instant mode needs hidden sensor entities** — instant evaluation is configured for a channel whose hidden sensor entities are still disabled. The issue clears automatically once the sensors are enabled or the channel is switched back to relaxed mode.
 
 ### Removing / deleting
 

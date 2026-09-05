@@ -5,6 +5,7 @@ import asyncio
 import pytest
 from homeassistant.const import STATE_OFF, STATE_ON
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import issue_registry as ir
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.bilresa_remote.const import CONF_DEVICE_ID, DOMAIN
@@ -278,3 +279,55 @@ async def test_unload_stops_engine(hass: HomeAssistant, bilresa_device):
     await hass.config_entries.async_unload(entry.entry_id)
     await hass.async_block_till_done()
     assert entry.entry_id not in hass.data.get(DOMAIN, {})
+
+
+@pytest.mark.usefixtures("enable_custom_integrations")
+async def test_no_entities_issue_clears_when_entities_appear(
+    hass: HomeAssistant, bilresa_device
+):
+    """A repair issue is raised when no entities exist and clears once they do."""
+    entry = make_entry(hass, bilresa_device)
+    assert await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()
+
+    registry = ir.async_get(hass)
+    issue_id = f"no_entities_{entry.entry_id}"
+    assert registry.async_get_issue(DOMAIN, issue_id) is not None
+
+    register_remote_entity(
+        hass, bilresa_device, "event", "button_3", "2026-01-01T00:00:00.000+00:00",
+        {"event_type": "multi_press_1"},
+    )
+    await hass.async_block_till_done()
+    await asyncio.sleep(0.05)
+    assert registry.async_get_issue(DOMAIN, issue_id) is None
+
+
+@pytest.mark.usefixtures("enable_custom_integrations")
+async def test_instant_mode_missing_sensors_issue(hass: HomeAssistant, bilresa_device):
+    """Instant mode without the hidden sensor entities raises a repair issue."""
+    register_remote_entity(
+        hass, bilresa_device, "event", "button_3", "2026-01-01T00:00:00.000+00:00",
+        {"event_type": "multi_press_1"},
+    )
+    entry = make_entry(
+        hass, bilresa_device, {"scroll_wheel_mode_ext_ch1": "instant"}
+    )
+    assert await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()
+
+    registry = ir.async_get(hass)
+    issue_id = f"instant_sensors_missing_{entry.entry_id}"
+    issue = registry.async_get_issue(DOMAIN, issue_id)
+    assert issue is not None
+    assert "Channel 1" in issue.translation_placeholders["channels"]
+
+    # enabling one of the hidden sensor entities clears the issue
+    register_remote_entity(hass, bilresa_device, "sensor", "scroller_1", "0")
+    await hass.async_block_till_done()
+    await asyncio.sleep(0.05)
+    assert registry.async_get_issue(DOMAIN, issue_id) is None
+
+    await hass.config_entries.async_unload(entry.entry_id)
+    await hass.async_block_till_done()
+    assert registry.async_get_issue(DOMAIN, issue_id) is None

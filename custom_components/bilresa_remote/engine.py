@@ -16,16 +16,20 @@ import logging
 from typing import Any
 
 from homeassistant.core import Context, HomeAssistant, State, callback
-from homeassistant.helpers import entity_registry as er
+from homeassistant.helpers import entity_registry as er, issue_registry as ir
 from homeassistant.helpers.event import async_track_state_change_event
 from homeassistant.helpers.script import Script
 
 from .const import (
+    CHANNELS,
     CHANNEL_DEFAULTS,
     CONF_DEVICE_ID,
     DOMAIN,
     EVAL_INSTANT,
     EVAL_RELAXED,
+    ISSUE_INSTANT_MISSING,
+    ISSUE_NO_ENTITIES,
+    LEARN_MORE_URL,
     MODE_COLOR_TEMP_AND_HUE,
     MODE_COLOR_TEMP_ONLY,
     MODE_DYNAMIC,
@@ -79,17 +83,22 @@ class BilresaEngine:
         )
         await self._resubscribe()
         if not self._entity_to_key:
-            _LOGGER.warning(
-                "No BILRESA event/sensor entities found for device %s. "
-                "Check that the device is added via Matter and, for instant "
-                "scroll mode, that the hidden sensor entities are enabled.",
+            _LOGGER.debug(
+                "No BILRESA event/sensor entities found for device %s",
                 self.entry.data.get(CONF_DEVICE_ID),
             )
         self._worker_task = self.hass.async_create_background_task(
             self._worker_loop(), name=f"{DOMAIN}_worker_{self.entry.entry_id}"
         )
+        self._async_update_issues()
 
     async def async_stop(self) -> None:
+        ir.async_delete_issue(
+            self.hass, DOMAIN, f"{ISSUE_NO_ENTITIES}_{self.entry.entry_id}"
+        )
+        ir.async_delete_issue(
+            self.hass, DOMAIN, f"{ISSUE_INSTANT_MISSING}_{self.entry.entry_id}"
+        )
         if self._registry_unsub is not None:
             self._registry_unsub()
             self._registry_unsub = None
@@ -121,6 +130,49 @@ class BilresaEngine:
     async def _refresh(self) -> None:
         self._rebuild_map()
         await self._resubscribe()
+        self._async_update_issues()
+
+    def _async_update_issues(self) -> None:
+        """Raise or clear repair issues based on the current entity mapping."""
+        entry_id = self.entry.entry_id
+        if not self._key_to_entity:
+            ir.async_create_issue(
+                self.hass,
+                DOMAIN,
+                f"{ISSUE_NO_ENTITIES}_{entry_id}",
+                is_fixable=False,
+                severity=ir.IssueSeverity.WARNING,
+                translation_key=ISSUE_NO_ENTITIES,
+                translation_placeholders={"name": self.entry.title},
+                learn_more_url=LEARN_MORE_URL,
+            )
+        else:
+            ir.async_delete_issue(self.hass, DOMAIN, f"{ISSUE_NO_ENTITIES}_{entry_id}")
+
+        instant_channels = [
+            channel
+            for channel in CHANNELS
+            if self._channel_option(channel, "scroll_wheel_mode_ext") == EVAL_INSTANT
+        ]
+        missing = [
+            f"Channel {channel}"
+            for channel in instant_channels
+            if (channel, "scroll_left_ext") not in self._key_to_entity
+            and (channel, "scroll_right_ext") not in self._key_to_entity
+        ]
+        if missing:
+            ir.async_create_issue(
+                self.hass,
+                DOMAIN,
+                f"{ISSUE_INSTANT_MISSING}_{entry_id}",
+                is_fixable=False,
+                severity=ir.IssueSeverity.WARNING,
+                translation_key=ISSUE_INSTANT_MISSING,
+                translation_placeholders={"channels": ", ".join(missing)},
+                learn_more_url=LEARN_MORE_URL,
+            )
+        else:
+            ir.async_delete_issue(self.hass, DOMAIN, f"{ISSUE_INSTANT_MISSING}_{entry_id}")
 
     async def _resubscribe(self) -> None:
         if self._state_unsub is not None:
